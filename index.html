@@ -230,9 +230,11 @@ let minV, maxV, stepV, currentVal;
 if (isFiller(s.silo)) {
     minV = -10; maxV = -2; stepV = 1;
     currentVal = (s.spd !== null && s.spd !== undefined) ? s.spd : -5;
+    if (typeof currentVal === 'string') currentVal = currentVal === 'strong' ? -2 : (currentVal === 'moderate' ? -4 : -5);
 } else {
     minV = 0.5; maxV = 2; stepV = 0.5;
     currentVal = (s.spd !== null && s.spd !== undefined) ? s.spd : 1;
+    if (typeof currentVal === 'string') currentVal = currentVal === 'strong' ? 2 : (currentVal === 'moderate' ? 1.5 : 1);
 }
 const lbl = getMpmLabel(currentVal, s.silo);
 
@@ -269,14 +271,10 @@ const inU=(si,ex)=>BELTS.some(b=>b.id!==ex&&S[b.id].silo===si&&(S[b.id].run||S[b
 function tC(id){const el=document.getElementById(`c-${id}`);const was=el.classList.contains('xp');el.classList.toggle('xp');if(!was)setTimeout(()=>el.scrollIntoView({behavior:'auto',block:'start'}),50)}
 function selG(bid,i){
     const s=S[bid];
-    if(s.run||s.pau){
-        s.grp=s.grp===i?null:i;
-    }else{
-        s.grp=s.grp===i?null:i;
-        if(s.grp!==null){
-            const g=gB(bid).sg[s.grp];
-            if(s.silo&&!g.s.includes(s.silo)){s.silo=null;s.el=0;s.mt=null;s.spd=null}
-        }
+    s.grp=s.grp===i?null:i;
+    if(!s.run && !s.pau && s.grp!==null){
+        const g=gB(bid).sg[s.grp];
+        if(s.silo&&!g.s.includes(s.silo)){s.silo=null;s.el=0;s.mt=null;s.spd=null}
     }
     renderAll();
     document.getElementById(`c-${bid}`).classList.add('xp')
