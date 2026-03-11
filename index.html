@@ -81,7 +81,6 @@ h1{font-size:26px;font-weight:600;letter-spacing:2px;text-transform:uppercase}
 .mbt{height:32px;border:1px solid var(--sp);border-radius:8px;background:var(--ce);color:var(--tx2);font-size:10px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s}.mbt:active{transform:scale(.9)}.mbt.sl{background:var(--ord);color:var(--or);border-color:rgba(232,148,58,.2)}
 .spc{margin-top:10px}
 
-/* Estilos para el slider mejorado */
 .spd-sl-c { padding: 14px 12px 6px; }
 .spd-sl-h { display: flex; justify-content: space-between; font-size: 10px; color: var(--tx2); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; font-weight: 600; font-family: var(--mono); }
 .spd-sl-v { color: var(--ac); font-size: 13px; }
@@ -130,35 +129,35 @@ const MX=37,siloC=s=>Math.floor(s/100)*100,isFiller=s=>[200,400,600].includes(si
 function fillLim(s){if(isFiller(s))return 4;if(FILL_15.includes(s))return 15;if(FILL_10.includes(s))return 10;return 1}
 const has700C=(s,b)=>is700CE(s,b)&&!FILL_15.includes(s);
 
-// Funciones Matemáticas Refinadas para manejar directamente los "Metros por cada 5 minutos"
-function getM5(val, silo) {
-    let isF = isFiller(silo);
-    if (val === null || val === undefined) return isF ? 4 : 1;
-    if (typeof val === 'number') {
-        if (val === 0) return isF ? 4 : 1;
-        if (val === 50) return isF ? 6 : 2; 
-        if (val === 100) return isF ? 8 : 3;
-        return val;
-    }
+// Logica matemática basada en el rango 10 (lento) a X (rapido)
+function getMins(val) {
+    if (val === null || val === undefined) return 5;
     if (typeof val === 'string') {
-        if (val === 'moderate') return isF ? 6 : 2;
-        if (val === 'strong') return isF ? 8 : 3;
+        if (val === 'moderate') return 4;
+        if (val === 'strong') return 3;
     }
-    return isF ? 4 : 1;
+    if (typeof val === 'number') {
+        return 10 - val;
+    }
+    return 5; // Default
 }
 
 function getMpm(val, silo) {
-    const m5 = getM5(val, silo);
-    return 5 / m5;
+    const mins = getMins(val);
+    if (isFiller(silo)) {
+        return mins / 4;
+    } else {
+        return mins / 1;
+    }
 }
 
 function getMpmLabel(val, silo) {
-    const m5 = getM5(val, silo);
+    const mins = getMins(val);
+    const fm = mins % 1 === 0 ? mins : mins.toFixed(1);
     if (isFiller(silo)) {
-        return `5m=${m5}m`;
+        return `${fm} min = 4 mts`;
     } else {
-        const mpm = 5 / m5;
-        return `${mpm % 1 === 0 ? mpm : mpm.toFixed(1)} min/m`;
+        return `${fm} min = 1 mt`;
     }
 }
 
@@ -199,7 +198,7 @@ function estMeters(mt,spd,el,silo,bid){
 
 const fETA=ms=>{if(ms==null)return'';if(ms<=0)return'¡Completo!';return`~${fM(ms/60000)} rest.`},sETA=ms=>{if(ms==null)return'';if(ms<=0)return'✓';return`~${fM(ms/60000)}`},mtL=mt=>mt===MX?'Vacío':mt+' mts.',mtSL=mt=>mt===MX?'Vacío':mt+' (mts)',mtH=mt=>mt===MX?'Vacío':(mt||'?')+' mts.',fHr=h=>h+' hs.';
 const BELTS=[{id:'ce1',n:'CE 1',sh:'CE1',tp:'ce',sg:[{l:'700',s:R(701,718)}]},{id:'ce2',n:'CE 2',sh:'CE2',tp:'ce',sg:[{l:'700',s:R(701,717)}]},{id:'cd1',n:'CD 1',sh:'CD1',tp:'cd',sg:[{l:'500',s:R(501,518)},{l:'600',s:R(601,617)}]},{id:'cd2',n:'CD 2',sh:'CD2',tp:'cd',sg:[{l:'300',s:R(301,318)},{l:'400',s:R(401,417)}]},{id:'cd3',n:'CD 3',sh:'CD3',tp:'cd',sg:[{l:'100',s:R(101,118)},{l:'200',s:R(201,217)}]}],aS=b=>b.sg.flatMap(g=>g.s),gB=id=>BELTS.find(b=>b.id===id);
-const S={},TI={},dSt=()=>({silo:null,run:false,pau:false,el:0,st:null,po:0,grp:null,mt:null,sMt:false,spd:null,sid:null});BELTS.forEach(b=>{S[b.id]=dSt()});
+const S={},TI={},dSt=()=>({silo:null,run:false,pau:false,el:0,st:null,po:0,grp:null,mt:null,sMt:false,spd:5,sid:null});BELTS.forEach(b=>{S[b.id]=dSt()});
 const TPLS={modern:{name:'Moderno',desc:'Limpio y geométrico',dot:'linear-gradient(135deg,#3b8bff,#6c5ce7)',font:"'Outfit',system-ui,sans-serif",mono:"'JetBrains Mono',monospace",bg:'#07080b',bg2:'#0c0d12',cd:'#111218',ce:'#181920',ch:'#1e2028',tx:'#dcdfe8',ts:'#6e7186',sp:'rgba(255,255,255,.06)',ac:'#3b8bff',pu:'#6c5ce7',gn:'#22c572',or:'#e8943a',rd:'#e84057',tg:'linear-gradient(135deg,#3b8bff,#6c5ce7)'},neutral:{name:'Neutral',desc:'Tonos cálidos y suaves',dot:'linear-gradient(135deg,#c9a96e,#a08050)',font:"'DM Sans',system-ui,sans-serif",mono:"'JetBrains Mono',monospace",bg:'#0c0b09',bg2:'#12110e',cd:'#181714',ce:'#1f1e1a',ch:'#262520',tx:'#dbd6cc',ts:'#8a8478',sp:'rgba(255,255,255,.06)',ac:'#c9a96e',pu:'#a08050',gn:'#7ab87a',or:'#d4943e',rd:'#c45a50',tg:'linear-gradient(135deg,#c9a96e,#a08050)'},sophisticated:{name:'Sofisticado',desc:'Elegante y minimalista',dot:'linear-gradient(135deg,#8b7af5,#e084b4)',font:"'Sora',system-ui,sans-serif",mono:"'JetBrains Mono',monospace",bg:'#09080e',bg2:'#0e0d14',cd:'#14131b',ce:'#1b1a23',ch:'#22212b',tx:'#d8d4e4',ts:'#7a768e',sp:'rgba(255,255,255,.06)',ac:'#8b7af5',pu:'#e084b4',gn:'#5ec4a0',or:'#d4a24e',rd:'#d45a6e',tg:'linear-gradient(135deg,#8b7af5,#e084b4)'}};
 let cfg=JSON.parse(localStorage.getItem('spc_cfg')||'{"showClock":true,"showHist":true,"showDur":true,"tpl":"modern"}');
 function tgS(k){cfg[k]=!cfg[k];localStorage.setItem('spc_cfg',JSON.stringify(cfg));aCfg()}
@@ -227,12 +226,20 @@ let hPg=0;const HPP=7;function renderAll(){renderB();renderHist();uAC();aCfg()}
 let sc=Date.now();const nSid=()=>'s'+(sc++);
 function renderB(){document.getElementById('BC').innerHTML=BELTS.map(b=>{const s=S[b.id],tot=aS(b).length;let sub,subC='',tP='',tPC='hh',etP='',etPC='hh';
 if(s.run||s.pau){sub=`Silo ${s.silo}${s.mt?' - '+mtSL(s.mt):''}`;subC='av';tP=fT(s.el);tPC=s.pau?'pa':'';if(s.mt){const e=calcETA(s.mt,s.spd,s.el,s.silo,b.id);const cm=estMeters(s.mt,s.spd,s.el,s.silo,b.id);etP=`${sETA(e)} (${cm} mts)`;etPC=''}}else if(s.silo){sub=`Silo ${s.silo}${s.mt?' - '+mtSL(s.mt):''}`}else{sub=`${tot} silos`}
-const multi=b.sg.length>1;let siloH='';if(multi){siloH+=`<div class="ctb">${b.sg.map((g,i)=>`<button class="ctt ${s.grp===i?'av':''}" onclick="selG('${b.id}',${i})">${g.l}</button>`).join('')}</div>`;if(s.grp!==null)siloH+=mkG(b.id,b.sg[s.grp].s,s)}else{siloH+=mkG(b.id,b.sg[0].s,s)}
+
+const multi=b.sg.length>1;let siloH='';
+// Botones de Grupos siempre visibles
+siloH+=`<div class="ctb">${b.sg.map((g,i)=>`<button class="ctt ${s.grp===i?'av':''}" onclick="selG('${b.id}',${i})">${multi?g.l:'Silos '+g.l}</button>`).join('')}</div>`;
+if(s.grp!==null) siloH+=mkG(b.id,b.sg[s.grp].s,s);
+
 let mtHTML='',spHTML='',rcHTML='';if(s.silo){const isV=s.mt===MX;mtHTML=`<div class="msc"><div class="msr"><button class="msb ${s.sMt?'av':''}" onclick="tMt('${b.id}')">${s.mt?mtL(s.mt):'Metros'}</button><button class="vcb ${isV?'sl':''}" onclick="sMt('${b.id}',${MX})">Vacío</button></div><div class="mgd ${s.sMt?'':'hh'}">${R(1,MX-1).map(m=>`<button class="mbt ${s.mt===m?'sl':''}" onclick="sMt('${b.id}',${m})">${m}</button>`).join('')}</div></div>`;
 
-const m5 = getM5(s.spd, s.silo);
-const maxV = isFiller(s.silo) ? 8 : 4;
-const lbl = getMpmLabel(m5, s.silo);
+// Logica del Slider 
+// Max val: Normal=7 (10-7=3 mins), Filler=8 (10-8=2 mins)
+const maxV = isFiller(s.silo) ? 8 : 7;
+let currentVal = s.spd;
+if (currentVal === null || currentVal === undefined || typeof currentVal === 'string') currentVal = 5;
+const lbl = getMpmLabel(currentVal, s.silo);
 
 spHTML=`<div class="spd-sl-c">
     <div class="spd-sl-h">
@@ -240,7 +247,7 @@ spHTML=`<div class="spd-sl-c">
         <span class="spd-sl-v" id="lbl-${b.id}">${lbl}</span>
         <span>Rápido</span>
     </div>
-    <input type="range" min="0.5" max="${maxV}" step="0.5" value="${m5}" class="spd-range" 
+    <input type="range" min="0" max="${maxV}" step="0.5" value="${currentVal}" class="spd-range" 
            oninput="document.getElementById('lbl-${b.id}').textContent = getMpmLabel(parseFloat(this.value), ${s.silo})" 
            onchange="sSpd('${b.id}', this.value)">
 </div>`;
@@ -265,8 +272,20 @@ function uAC(){const ct=BELTS.filter(b=>S[b.id].run||S[b.id].pau).length;const e
 function uPv(){BELTS.forEach(b=>{const s=S[b.id];if(s.run||s.pau){const p=document.getElementById(`pv-${b.id}`);if(p)p.textContent=fT(s.el);if(s.mt&&s.silo){const e=calcETA(s.mt,s.spd,s.el,s.silo,b.id);const cm=estMeters(s.mt,s.spd,s.el,s.silo,b.id);const e1=document.getElementById(`pe-${b.id}`);if(e1)e1.textContent=`${sETA(e)} (${cm} mts)`;const e2=document.getElementById(`et-${b.id}`);if(e2)e2.textContent=fETA(e)}}})}
 const inU=(si,ex)=>BELTS.some(b=>b.id!==ex&&S[b.id].silo===si&&(S[b.id].run||S[b.id].pau));
 function tC(id){const el=document.getElementById(`c-${id}`);const was=el.classList.contains('xp');el.classList.toggle('xp');if(!was)setTimeout(()=>el.scrollIntoView({behavior:'auto',block:'start'}),50)}
-function selG(bid,i){const s=S[bid];if(s.run||s.pau)return;s.grp=s.grp===i?null:i;if(s.grp!==null){const g=gB(bid).sg[s.grp];if(s.silo&&!g.s.includes(s.silo)){s.silo=null;s.el=0;s.mt=null;s.spd=null}}renderAll();document.getElementById(`c-${bid}`).classList.add('xp')}
-function selS(bid,si){const s=S[bid];if(s.run||s.pau)return;s.silo=s.silo===si?null:si;s.el=0;s.mt=null;s.sMt=false;s.spd=null;renderAll();document.getElementById(`c-${bid}`).classList.add('xp')}
+function selG(bid,i){const s=S[bid];if(s.run||s.pau)return;s.grp=s.grp===i?null:i;if(s.grp!==null){const g=gB(bid).sg[s.grp];if(s.silo&&!g.s.includes(s.silo)){s.silo=null;s.el=0;s.mt=null;s.spd=5}}renderAll();document.getElementById(`c-${bid}`).classList.add('xp')}
+function selS(bid,si){
+    const s=S[bid];
+    if(s.run||s.pau)return;
+    if(s.silo===si){
+        s.silo=null;
+    }else{
+        s.silo=si;
+        s.grp=null; // Comprime la ventana de selección automáticamente
+    }
+    s.el=0;s.mt=null;s.sMt=false;s.spd=5;
+    renderAll();
+    document.getElementById(`c-${bid}`).classList.add('xp');
+}
 function tMt(b){S[b].sMt=!S[b].sMt;renderAll();document.getElementById(`c-${b}`).classList.add('xp')}
 function sMt(b,m){S[b].mt=S[b].mt===m?null:m;renderAll();document.getElementById(`c-${b}`).classList.add('xp')}
 function sSpd(b, val) {S[b].spd = parseFloat(val); svS(); renderAll(); document.getElementById(`c-${b}`).classList.add('xp');}
@@ -277,7 +296,7 @@ function paT(b){const s=S[b];s.run=false;s.pau=true;s.po=s.el;clearInterval(TI[b
 function reT(b){const s=S[b];s.run=true;s.pau=false;s.st=Date.now();startI(b);stLN(b);svS();renderAll();document.getElementById(`c-${b}`).classList.add('xp')}
 function rrT(b){const s=S[b];clearInterval(TI[b]);spLN(b);const n=new Date(),hr=`${P(n.getHours())}:${P(n.getMinutes())}`;addLog({bid:b,silo:s.silo,meters:s.mt,speed:getMpmLabel(s.spd,s.silo),duration:fT(s.el),hour:hr,ms:s.el,sid:s.sid,type:'restart'});s.run=true;s.pau=false;s.st=Date.now();s.po=0;s.el=0;startI(b);stLN(b);svS();renderAll();document.getElementById(`c-${b}`).classList.add('xp')}
 function spT(b){const s=S[b];clearInterval(TI[b]);delete TI[b];spLN(b);const dur=fT(s.el),n=new Date(),hr=`${P(n.getHours())}:${P(n.getMinutes())}`;const logs=getLogs();const se=logs.filter(e=>e.sid===s.sid);if(se.length>0){se[se.length-1].duration=dur;se[se.length-1].ms=s.el;se[se.length-1].hour=hr;saveLogs(logs)}
-s.run=false;s.pau=false;s.el=0;s.po=0;s.sid=null;s.silo=null;s.mt=null;s.sMt=false;s.spd=null;s.grp=null;svS();renderAll();document.getElementById(`c-${b}`).classList.add('xp')}
+s.run=false;s.pau=false;s.el=0;s.po=0;s.sid=null;s.silo=null;s.mt=null;s.sMt=false;s.spd=5;s.grp=null;svS();renderAll();document.getElementById(`c-${b}`).classList.add('xp')}
 function clH(){if(confirm('¿Borrar todo el historial?')){saveLogs([]);hPg=0;renderHist()}}
 function sN2(msg){const bn=document.getElementById('NB');document.getElementById('Ni').textContent='✅';document.getElementById('Nt').textContent='SPC';document.getElementById('Nb').textContent=msg;bn.classList.add('sh');setTimeout(()=>bn.classList.remove('sh'),3000)}
 if('serviceWorker' in navigator)navigator.serviceWorker.register('./sw.js').catch(()=>{});
