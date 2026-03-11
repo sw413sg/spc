@@ -149,7 +149,7 @@ function getMpmLabel(val, silo) {
     } else {
         let v = (val !== null && val !== undefined && typeof val === 'number') ? val : 1;
         if (typeof val === 'string') v = val === 'strong' ? 2 : (val === 'moderate' ? 1.5 : 1);
-        const fm = (v % 1 === 0 ? v : v.toFixed(1)).toString().replace('.', ',');
+        const fm = (v % 1 === 0 ? v : parseFloat(v.toFixed(2))).toString().replace('.', ',');
         return `5 min = ${fm} mts`;
     }
 }
@@ -232,7 +232,7 @@ if (isFiller(s.silo)) {
     currentVal = (s.spd !== null && s.spd !== undefined) ? s.spd : -5;
     if (typeof currentVal === 'string') currentVal = currentVal === 'strong' ? -2 : (currentVal === 'moderate' ? -4 : -5);
 } else {
-    minV = 0.5; maxV = 2; stepV = 0.5;
+    minV = 0.5; maxV = 2; stepV = 0.25;
     currentVal = (s.spd !== null && s.spd !== undefined) ? s.spd : 1;
     if (typeof currentVal === 'string') currentVal = currentVal === 'strong' ? 2 : (currentVal === 'moderate' ? 1.5 : 1);
 }
@@ -248,7 +248,7 @@ spHTML=`<div class="spd-sl-c">
            oninput="document.getElementById('lbl-${b.id}').textContent = getMpmLabel(parseFloat(this.value), ${s.silo})" 
            onchange="sSpd('${b.id}', this.value)">
 </div>`;
-rcHTML=`<button class="rcb" onclick="rCfg('${b.id}')">Reiniciar configuración</button>`}
+rcHTML=`<div style="display:flex;gap:8px;margin-top:12px"><button class="rcb" style="margin-top:0;flex:1" onclick="sSpd('${b.id}', ${isFiller(s.silo) ? -5 : 1})">Velocidad normal</button><button class="rcb" style="margin-top:0;width:44px;flex:none;font-size:16px;opacity:0.6" onclick="rCfg('${b.id}')" title="Reiniciar configuración">↺</button></div>`}
 const eta=calcETA(s.mt,s.spd,s.el,s.silo,b.id),etaTxt=fETA(eta),shE=s.silo&&s.mt&&(s.run||s.pau);
 const spdL=s.silo ? getMpmLabel(s.spd, s.silo) : '';
 const curMt=(s.run||s.pau)&&s.mt?estMeters(s.mt,s.spd,s.el,s.silo,b.id):null;
