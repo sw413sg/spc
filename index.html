@@ -210,7 +210,7 @@ function cS(){document.getElementById('SM').classList.remove('sh')}
 function exD(){const d={spc_logs:localStorage.getItem('spc_logs'),spc_state:localStorage.getItem('spc_state'),spc_cfg:localStorage.getItem('spc_cfg')};const bl=new Blob([JSON.stringify(d,null,2)],{type:'application/json'}),u=URL.createObjectURL(bl),a=document.createElement('a');a.href=u;a.download=`spc_${tK()}.json`;document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(u);cS();sN2('Exportado ✅')}
 function imD(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=ev=>{try{const d=JSON.parse(ev.target.result);if(d.spc_logs)localStorage.setItem('spc_logs',d.spc_logs);if(d.spc_state)localStorage.setItem('spc_state',d.spc_state);if(d.spc_cfg)localStorage.setItem('spc_cfg',d.spc_cfg);ldS();cfg=JSON.parse(localStorage.getItem('spc_cfg')||'{}');renderAll();cS();sN2('Importado ✅')}catch{alert('Archivo inválido.')}};r.readAsText(f);e.target.value=''}
 function rstAll(){if(!confirm('¿Reiniciar todas las cintas?'))return;BELTS.forEach(b=>{if(TI[b.id]){clearInterval(TI[b.id]);delete TI[b.id]}spLN(b.id);S[b.id]=dSt()});svS();cS();renderAll();sN2('Reiniciado')}
-async function updApp(){if(confirm('¿Buscar y aplicar nueva versión? La página se recargará.')){try{if('serviceWorker' in navigator){const regs=await navigator.serviceWorker.getRegistrations();for(let r of regs)await r.unregister()}if('caches' in window){const keys=await caches.keys();for(let k of keys)await caches.delete(k)}window.location.href=window.location.pathname+'?v='+Date.now()}catch(e){window.location.reload(true)}}}
+async function updApp(){if(!confirm('¿Buscar y aplicar nueva versión? La página se recargará.')) return; try{ if('serviceWorker' in navigator){ const regs=await navigator.serviceWorker.getRegistrations(); for(let r of regs) await r.unregister(); } if('caches' in window){ const keys=await caches.keys(); for(let k of keys) await caches.delete(k); } await fetch(window.location.pathname, {cache: 'no-store'}); window.location.replace(window.location.pathname); } catch(e) { window.location.reload(true); } }
 function uNS(){const st=document.getElementById('ns'),btn=document.getElementById('nb2');if(!('Notification' in window)){st.textContent='No soportado';st.className='nst';btn.style.display='none';return}const p=Notification.permission;if(p==='granted'){st.textContent='Activadas';st.className='nst ok';btn.style.display='none'}else if(p==='denied'){st.textContent='Bloqueadas';st.className='nst';btn.style.display='none'}else{st.textContent='Desactivadas';st.className='nst';btn.style.display=''}}
 function askNP(){if(!('Notification' in window))return alert('No soportado.');Notification.requestPermission().then(()=>{uNS();if(Notification.permission==='granted')sP('SPC','Notificaciones activadas')})}
 const ntfI={},ntfSent={};function stLN(b){if(!('Notification' in window)||Notification.permission!=='granted'||!navigator.serviceWorker?.controller)return;ntfSent[b]=false;ntfI[b]=setInterval(()=>chkNtf(b),3000)}
@@ -307,16 +307,7 @@ function spT(b){const s=S[b];clearInterval(TI[b]);delete TI[b];spLN(b);const dur
 s.run=false;s.pau=false;s.el=0;s.po=0;s.sid=null;s.silo=null;s.mt=null;s.sMt=false;s.spd=null;s.grp=null;svS();renderAll();document.getElementById(`c-${b}`).classList.add('xp')}
 function clH(){if(confirm('¿Borrar todo el historial?')){saveLogs([]);hPg=0;renderHist()}}
 function sN2(msg){const bn=document.getElementById('NB');document.getElementById('Ni').textContent='✅';document.getElementById('Nt').textContent='SPC';document.getElementById('Nb').textContent=msg;bn.classList.add('sh');setTimeout(()=>bn.classList.remove('sh'),3000)}
-
-// Sistema de auto-actualización del Service Worker modificado
-if('serviceWorker' in navigator){
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js').then(reg => {
-      reg.update(); // Fuerza al teléfono a buscar cambios en GitHub siempre que se abre la app
-    }).catch(()=>{});
-  });
-}
-
+if('serviceWorker' in navigator)navigator.serviceWorker.register('./sw.js').catch(()=>{});
 ldS();renderAll();
 BELTS.forEach(b=>{const s=S[b.id];if(s.run&&s.st){s.el=Date.now()-s.st+s.po;startI(b.id);stLN(b.id)}});
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)BELTS.forEach(b=>{const s=S[b.id];if(s.run){s.el=Date.now()-s.st+s.po;const el=document.getElementById(`tm-${b.id}`);if(el)el.textContent=fT(s.el)}})});
