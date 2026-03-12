@@ -1,4 +1,4 @@
-const CACHE_NAME = 'silotrack-v1';
+const CACHE_NAME = 'spc-v1.4';
 const ASSETS = [
   './',
   './index.html',
@@ -25,17 +25,42 @@ self.addEventListener('activate', event => {
   self.clients.claim();
 });
 
-// Fetch — cache first, then network
+// Fetch — Estrategia mixta (Network First para HTML, Cache First para estáticos)
 self.addEventListener('fetch', event => {
+  // 1. Si la petición es de navegación (ej. cargando el index.html principal)
+  if (event.request.mode === 'navigate' || event.request.headers.get('accept').includes('text/html')) {
+    event.respondWith(
+      fetch(event.request)
+        .then(response => {
+          // Hay internet: Obtenemos la última versión de GitHub, la actualizamos en el caché y la mostramos.
+          const clonedResponse = response.clone();
+          caches.open(CACHE_NAME).then(cache => cache.put(event.request, clonedResponse));
+          return response;
+        })
+        .catch(() => {
+          // No hay internet (offline): Buscamos en el caché la última versión guardada.
+          return caches.match(event.request);
+        })
+    );
+    return;
+  }
+
+  // 2. Para el resto de archivos (imágenes, json), usamos Cache First para mayor velocidad.
   event.respondWith(
-    caches.match(event.request).then(cached => cached || fetch(event.request))
+    caches.match(event.request).then(cached => {
+      return cached || fetch(event.request).then(response => {
+        const clonedResponse = response.clone();
+        caches.open(CACHE_NAME).then(cache => cache.put(event.request, clonedResponse));
+        return response;
+      });
+    })
   );
 });
 
 // Push notification handler
 self.addEventListener('push', event => {
   const data = event.data ? event.data.json() : {};
-  const title = data.title || 'SiloTrack';
+  const title = data.title || 'SPC';
   const options = {
     body: data.body || 'Actualización de carga',
     icon: './icon-192.png',
