@@ -1,21 +1,18 @@
 const CACHE_NAME = 'spc-v1.4';
 const ASSETS = [
   './',
-  './index.html',
   './manifest.json',
   './icon-192.png',
   './icon-512.png'
 ];
 
-// Install — cache assets
 self.addEventListener('install', event => {
+  self.skipWaiting();
   event.waitUntil(
     caches.open(CACHE_NAME).then(cache => cache.addAll(ASSETS))
   );
-  self.skipWaiting();
 });
 
-// Activate — clean old caches
 self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys().then(keys =>
@@ -25,32 +22,30 @@ self.addEventListener('activate', event => {
   self.clients.claim();
 });
 
-// Fetch — Estrategia mixta (Network First para HTML, Cache First para estáticos)
 self.addEventListener('fetch', event => {
-  // 1. Si la petición es de navegación (ej. cargando el index.html principal)
+  // Estrategia Network-First ESTRICTA para el HTML (Ignora el caché de GitHub)
   if (event.request.mode === 'navigate' || event.request.headers.get('accept').includes('text/html')) {
     event.respondWith(
-      fetch(event.request)
+      fetch(event.request.url, { cache: 'no-store' }) // Obliga a buscar siempre la versión real del servidor
         .then(response => {
-          // Hay internet: Obtenemos la última versión de GitHub, la actualizamos en el caché y la mostramos.
-          const clonedResponse = response.clone();
-          caches.open(CACHE_NAME).then(cache => cache.put(event.request, clonedResponse));
+          const cloned = response.clone();
+          caches.open(CACHE_NAME).then(cache => cache.put(event.request, cloned));
           return response;
         })
         .catch(() => {
-          // No hay internet (offline): Buscamos en el caché la última versión guardada.
+          // Si no hay internet, busca la última guardada
           return caches.match(event.request);
         })
     );
     return;
   }
 
-  // 2. Para el resto de archivos (imágenes, json), usamos Cache First para mayor velocidad.
+  // Cache-First para imágenes y el resto (Carga ultra rápida)
   event.respondWith(
     caches.match(event.request).then(cached => {
       return cached || fetch(event.request).then(response => {
-        const clonedResponse = response.clone();
-        caches.open(CACHE_NAME).then(cache => cache.put(event.request, clonedResponse));
+        const cloned = response.clone();
+        caches.open(CACHE_NAME).then(cache => cache.put(event.request, cloned));
         return response;
       });
     })
