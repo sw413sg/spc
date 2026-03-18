@@ -10,7 +10,7 @@
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-192.png">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600&family=Outfit:wght@300;400;500;600;700&family=Sora:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<title>SPC v1.7</title>
+<title>SPC v1.8</title>
 <style id="TS"></style>
 <style id="TPL"></style>
 <style>
@@ -50,7 +50,8 @@ h1{font-size:26px;font-weight:600;letter-spacing:2px;text-transform:uppercase}
 .bhr{display:flex;align-items:center;justify-content:space-between;padding:16px 12px;cursor:pointer}
 .bfi{display:flex;align-items:center;gap:14px;flex:1;min-width:0}
 .bic{width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:13px;color:white;font-weight:600;flex-shrink:0;position:relative;overflow:hidden}.bic::before{content:'';position:absolute;inset:0;opacity:.15;background:linear-gradient(135deg,transparent 40%,white)}.bic.ce{background:linear-gradient(135deg,#c44,#d66)}.bic.cd{background:linear-gradient(135deg,#4466aa,#5588cc)}
-.bxt{flex:1;min-width:0}.bxn{font-size:18px;font-weight:600}.bxs{font-size:13px;color:var(--tx2);margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:500}.bxs.av{color:var(--gn)}
+.bxt{flex:1;min-width:0}.bxn{font-size:18px;font-weight:600}.bxs{font-size:13px;color:var(--tx2);margin-top:4px;overflow:hidden;text-overflow:ellipsis;font-weight:500} /* Removido el white-space:nowrap acá para permitir saltos */
+.bxs.av{color:var(--gn)}
 .bxr{display:flex;flex-direction:column;align-items:flex-end;gap:2px;flex-shrink:0}
 .bxe{font-size:11px;color:var(--ac);font-weight:500;white-space:nowrap}.bxe.hh{display:none}
 .bxp{font-size:18px;font-weight:500;color:var(--gn)}.bxp.pa{color:var(--or);animation:bk 1s ease-in-out infinite}.bxp.hh{display:none}
@@ -145,7 +146,7 @@ h1{font-size:26px;font-weight:600;letter-spacing:2px;text-transform:uppercase}
 <div class="sg2"><div class="sgl">Cintas</div><button class="mob rst" onclick="rstAll()">Reiniciar todas las configuraciones</button></div>
 <div class="sg2"><div class="sgl">Notificaciones</div><div class="nst" id="ns"></div><button class="mob ntf" id="nb2" onclick="askNP()">Activar notificaciones</button></div>
 </div></div>
-<div class="hd"><div class="h1r"><div class="h1l"><h1>SPC</h1><div style="font-size:12px;color:var(--tx2);font-weight:600;font-family:var(--mono);margin-top:4px;">v1.7</div><span class="acb hh" id="AC"><span class="pld"></span><span id="AN">0</span></span></div><div class="hrr"><div class="clk" id="CK">00:00:00</div><button class="hib" onclick="oS()">⚙️</button></div></div></div>
+<div class="hd"><div class="h1r"><div class="h1l"><h1>SPC</h1><div style="font-size:12px;color:var(--tx2);font-weight:600;font-family:var(--mono);margin-top:4px;">v1.8</div><span class="acb hh" id="AC"><span class="pld"></span><span id="AN">0</span></span></div><div class="hrr"><div class="clk" id="CK">00:00:00</div><button class="hib" onclick="oS()">⚙️</button></div></div></div>
 <div class="ctn"><div class="spacer"></div><div id="BC"></div><div id="SUC"></div><div id="HC"></div></div>
 <script>
 const R=(a,b)=>{const r=[];for(let i=a;i<=b;i++)r.push(i);return r},P=n=>n.toString().padStart(2,'0'),fT=ms=>{const t=Math.floor(ms/1000),h=Math.floor(t/3600),m=Math.floor((t%3600)/60),s=t%60;return`${P(h)}:${P(m)}:${P(s)}`},fM=m=>{const h=Math.floor(m/60),r=Math.ceil(m%60);return h>0?`${h}h ${P(r)}m`:`${r} min`},dK=d=>`${d.getFullYear()}-${P(d.getMonth()+1)}-${P(d.getDate())}`,tK=()=>dK(new Date()),DN=['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'],MN=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'],fDL=k=>{const p=k.split('-'),d=new Date(+p[0],+p[1]-1,+p[2]);return`${DN[d.getDay()]} ${+p[2]} ${MN[+p[1]-1]}`};
@@ -222,7 +223,7 @@ function estMeters(mt,spd,el,silo,bid){
 
 const fETA=ms=>{if(ms==null)return'';if(ms<=0)return'¡Completo!';return`~${fM(ms/60000)} rest.`},sETA=ms=>{if(ms==null)return'';if(ms<=0)return'✓';return`~${fM(ms/60000)}`},mtL=mt=>mt===MX?'Vacío':mt+' mts.',mtSL=mt=>mt===MX?'Vacío':mt+' (mts)',mtH=mt=>mt===MX?'Vacío':(mt||'?')+' mts.',fHr=h=>h+' hs.';
 const BELTS=[{id:'ce1',n:'CE 1',sh:'CE1',tp:'ce',sg:[{l:'700',s:R(701,718)}]},{id:'ce2',n:'CE 2',sh:'CE2',tp:'ce',sg:[{l:'700',s:R(701,717)}]},{id:'cd1',n:'CD 1',sh:'CD1',tp:'cd',sg:[{l:'500',s:R(501,518)},{l:'600',s:R(601,617)}]},{id:'cd2',n:'CD 2',sh:'CD2',tp:'cd',sg:[{l:'300',s:R(301,318)},{l:'400',s:R(401,417)}]},{id:'cd3',n:'CD 3',sh:'CD3',tp:'cd',sg:[{l:'100',s:R(101,118)},{l:'200',s:R(201,217)}]}],aS=b=>b.sg.flatMap(g=>g.s),gB=id=>BELTS.find(b=>b.id===id);
-const S={},TI={},dSt=()=>({silo:null,run:false,pau:false,el:0,st:null,po:0,grp:null,mt:null,sMt:false,spd:null,sid:null,ori:null,cer:null,ocOpen:false,tmpOri:null,tmpCer:null});BELTS.forEach(b=>{S[b.id]=dSt()});
+const S={},TI={},dSt=()=>({silo:null,run:false,pau:false,el:0,st:null,po:0,grp:null,mt:null,sMt:false,spd:null,sid:null,ori:null,cer:null,ocOpen:false});BELTS.forEach(b=>{S[b.id]=dSt()});
 const TPLS={modern:{name:'Moderno',desc:'Limpio y geométrico',dot:'linear-gradient(135deg,#3b8bff,#6c5ce7)',font:"'Outfit',system-ui,sans-serif",mono:"'JetBrains Mono',monospace",bg:'#07080b',bg2:'#0c0d12',cd:'#111218',ce:'#181920',ch:'#1e2028',tx:'#dcdfe8',ts:'#6e7186',sp:'rgba(255,255,255,.06)',ac:'#3b8bff',pu:'#6c5ce7',gn:'#22c572',or:'#e8943a',rd:'#e84057',tg:'linear-gradient(135deg,#3b8bff,#6c5ce7)'},neutral:{name:'Neutral',desc:'Tonos cálidos y suaves',dot:'linear-gradient(135deg,#c9a96e,#a08050)',font:"'DM Sans',system-ui,sans-serif",mono:"'JetBrains Mono',monospace",bg:'#0c0b09',bg2:'#12110e',cd:'#181714',ce:'#1f1e1a',ch:'#262520',tx:'#dbd6cc',ts:'#8a8478',sp:'rgba(255,255,255,.06)',ac:'#c9a96e',pu:'#a08050',gn:'#7ab87a',or:'#d4943e',rd:'#c45a50',tg:'linear-gradient(135deg,#c9a96e,#a08050)'},sophisticated:{name:'Sofisticado',desc:'Elegante y minimalista',dot:'linear-gradient(135deg,#8b7af5,#e084b4)',font:"'Sora',system-ui,sans-serif",mono:"'JetBrains Mono',monospace",bg:'#09080e',bg2:'#0e0d14',cd:'#14131b',ce:'#1b1a23',ch:'#22212b',tx:'#d8d4e4',ts:'#7a768e',sp:'rgba(255,255,255,.06)',ac:'#8b7af5',pu:'#e084b4',gn:'#5ec4a0',or:'#d4a24e',rd:'#d45a6e',tg:'linear-gradient(135deg,#8b7af5,#e084b4)'}};
 
 let cfg=JSON.parse(localStorage.getItem('spc_cfg')||'{"showClock":true,"showHist":true,"showDur":true,"showUsed":true,"tpl":"modern"}');
@@ -273,17 +274,15 @@ let hPg=0;const HPP=7;
 function renderAll(){renderB();renderUsedSilos();renderHist();uAC();aCfg()}
 let sc=Date.now();const nSid=()=>'s'+(sc++);
 
-function tOc(b) { const s=S[b]; s.ocOpen=!s.ocOpen; s.tmpOri=s.ori; s.tmpCer=s.cer; renderAll(); }
-function sTmpOri(b,o) { S[b].tmpOri = S[b].tmpOri===o?null:o; renderAll(); }
-function sTmpCer(b,c) { S[b].tmpCer = S[b].tmpCer===c?null:c; renderAll(); }
-function svOriCer(b) { const s=S[b]; s.ori=s.tmpOri; s.cer=s.tmpCer; s.ocOpen=false; svS(); renderAll(); }
-function clOriCer(b) { const s=S[b]; s.ori=null; s.cer=null; s.tmpOri=null; s.tmpCer=null; s.ocOpen=false; svS(); renderAll(); }
+function tOc(b) { S[b].ocOpen=!S[b].ocOpen; renderAll(); document.getElementById(`c-${b}`).classList.add('xp'); }
+function sOri(b,o) { S[b].ori = S[b].ori===o?null:o; svS(); renderAll(); document.getElementById(`c-${b}`).classList.add('xp'); }
+function sCer(b,c) { S[b].cer = S[b].cer===c?null:c; svS(); renderAll(); document.getElementById(`c-${b}`).classList.add('xp'); }
 
 function renderB(){document.getElementById('BC').innerHTML=BELTS.map(b=>{const s=S[b.id],tot=aS(b).length;let sub,subC='',tP='',tPC='hh',etP='',etPC='hh';
 
 let beltExtra = '';
 if(s.cer || s.ori){
-    beltExtra = ` · <span style="color:${s.cer?CER_C[s.cer]:'inherit'}">${s.cer?CER_L[s.cer]:''}${s.ori&&s.cer?' ':''}${s.ori?`(${ORI_L[s.ori]})`:''}</span>`;
+    beltExtra = `<div style="color:${s.cer?CER_C[s.cer]:'inherit'};margin-top:2px;font-size:12px">${s.cer?CER_L[s.cer]:''}${s.ori&&s.cer?' ':''}${s.ori?`(${ORI_L[s.ori]})`:''}</div>`;
 }
 
 if(s.run||s.pau){sub=`Silo ${s.silo}${s.mt?' - '+mtSL(s.mt):''}${beltExtra}`;subC='av';tP=fT(s.el);tPC=s.pau?'pa':'';if(s.mt){const e=calcETA(s.mt,s.spd,s.el,s.silo,b.id);const cm=estMeters(s.mt,s.spd,s.el,s.silo,b.id);etP=`${sETA(e)} (${cm} mts)`;etPC=''}}else if(s.silo){sub=`Silo ${s.silo}${s.mt?' - '+mtSL(s.mt):''}${beltExtra}`}else{sub=`${tot} silos`}
@@ -323,17 +322,13 @@ if(s.ocOpen){
     <div style="margin-top:12px;padding:14px;background:var(--bg2);border:1px solid var(--sp);border-radius:12px">
         <div class="sgl">Origen</div>
         <div class="ctb">
-            <button class="ctt ${s.tmpOri==='descarga'?'av':''}" onclick="sTmpOri('${b.id}','descarga')">Descarga</button>
-            <button class="ctt ${s.tmpOri==='transferencia'?'av':''}" onclick="sTmpOri('${b.id}','transferencia')">Transf.</button>
-            <button class="ctt ${s.tmpOri==='transile'?'av':''}" onclick="sTmpOri('${b.id}','transile')">Transile</button>
+            <button class="ctt ${s.ori==='descarga'?'av':''}" onclick="sOri('${b.id}','descarga')">Descarga</button>
+            <button class="ctt ${s.ori==='transferencia'?'av':''}" onclick="sOri('${b.id}','transferencia')">Transf.</button>
+            <button class="ctt ${s.ori==='transile'?'av':''}" onclick="sOri('${b.id}','transile')">Transile</button>
         </div>
         <div class="sgl" style="margin-top:12px">Cereal</div>
-        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:12px">
-            ${Object.entries(CER_L).map(([k,v])=>`<button class="sbt ${s.tmpCer===k?'sl':''}" style="aspect-ratio:auto;height:36px;${s.tmpCer===k?`background:${CER_C[k]}22;border-color:${CER_C[k]} !important;color:${CER_C[k]}`:''}" onclick="sTmpCer('${b.id}','${k}')">${v}</button>`).join('')}
-        </div>
-        <div style="display:flex;gap:8px">
-            <button class="rcb" style="margin-top:0;flex:1;background:var(--gn);color:#000;border:none;font-weight:700" onclick="svOriCer('${b.id}')">Confirmar</button>
-            <button class="rcb" style="margin-top:0;width:auto;padding:0 16px;background:var(--rdd);color:var(--rd);border-color:rgba(232,64,87,.2)" onclick="clOriCer('${b.id}')">Borrar</button>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px">
+            ${Object.entries(CER_L).map(([k,v])=>`<button class="sbt ${s.cer===k?'sl':''}" style="aspect-ratio:auto;height:36px;${s.cer===k?`background:${CER_C[k]}22;border-color:${CER_C[k]} !important;color:${CER_C[k]}`:''}" onclick="sCer('${b.id}','${k}')">${v}</button>`).join('')}
         </div>
     </div>`;
 }
@@ -353,7 +348,7 @@ const eta=calcETA(s.mt,s.spd,s.el,s.silo,b.id),etaTxt=fETA(eta),shE=s.silo&&s.mt
 const spdL=s.silo ? getMpmLabel(s.spd, s.silo) : '';
 const curMt=(s.run||s.pau)&&s.mt?estMeters(s.mt,s.spd,s.el,s.silo,b.id):null;
 let ctrl='';if(s.silo){if(!s.run&&!s.pau){ctrl=`<button class="txb xst" onclick="stT('${b.id}')">Iniciar</button>`}else{ctrl=s.run?`<button class="txb xpa" onclick="paT('${b.id}')">Pausar</button>`:`<button class="txb xst" onclick="reT('${b.id}')">Reanudar</button>`;ctrl+=`<button class="txb xre" onclick="rrT('${b.id}')">↻</button><button class="txb xsp" onclick="spT('${b.id}')">⏹</button>`}}
-return`<div class="bc" id="c-${b.id}" style="${s.cer?`border-color:${CER_C[s.cer]} !important;box-shadow:0 0 10px ${CER_C[s.cer]}22`:''}"><div class="bhr" onclick="tC('${b.id}')"><div class="bfi"><div class="bic ${b.tp}">${b.sh}</div><div class="bxt"><div class="bxn">${b.n}</div><div class="bxs ${subC}">${sub}</div></div><div class="bxr"><div class="bxe ${etPC}" id="pe-${b.id}">${etP}</div><div class="bxp ${tPC}" id="pv-${b.id}">${tP}</div></div></div><div class="chv">›</div></div><div class="bbd"><div class="bbi"><div class="tsx">${s.silo?`<div class="txl">Silo</div><div class="txn">${s.silo}</div><div class="txbg">${s.mt?`<span class="txbd txm">${mtL(s.mt)}${curMt!==null?' → '+curMt+' mts':''}</span>`:''}<span class="txbd txs">${spdL}</span></div>`:''}<div class="tdd ${s.run?'ru':s.pau?'pa':''}" id="tm-${b.id}">${fT(s.el)}</div><div class="txe ${shE?'':'hh'}" id="et-${b.id}">${etaTxt}</div>${s.silo?`<div class="txc">${ctrl}</div>`:`<div class="nsm">Seleccioná un silo</div>`}</div>${siloH}${mtHTML}${spHTML}${rcHTML}</div></div></div>`}).join('')}
+return`<div class="bc" id="c-${b.id}" style="${s.cer?`border-color:${CER_C[s.cer]} !important;box-shadow:0 0 10px ${CER_C[s.cer]}22`:''}"><div class="bhr" onclick="tC('${b.id}')"><div class="bfi"><div class="bic ${b.tp}">${b.sh}</div><div class="bxt"><div class="bxn">${b.n}</div><div class="bxs ${subC}" style="white-space:normal">${sub}</div></div><div class="bxr"><div class="bxe ${etPC}" id="pe-${b.id}">${etP}</div><div class="bxp ${tPC}" id="pv-${b.id}">${tP}</div></div></div><div class="chv">›</div></div><div class="bbd"><div class="bbi"><div class="tsx">${s.silo?`<div class="txl">Silo</div><div class="txn">${s.silo}</div><div class="txbg">${s.mt?`<span class="txbd txm">${mtL(s.mt)}${curMt!==null?' → '+curMt+' mts':''}</span>`:''}<span class="txbd txs">${spdL}</span></div>`:''}<div class="tdd ${s.run?'ru':s.pau?'pa':''}" id="tm-${b.id}">${fT(s.el)}</div><div class="txe ${shE?'':'hh'}" id="et-${b.id}">${etaTxt}</div>${s.silo?`<div class="txc">${ctrl}</div>`:`<div class="nsm">Seleccioná un silo</div>`}</div>${siloH}${mtHTML}${spHTML}${rcHTML}</div></div></div>`}).join('')}
 function mkG(bid,silos,s){return`<div class="sgr">${silos.map(si=>{const iu=inU(si,bid),sl=s.silo===si;return`<button class="sbt ${sl?'sl':iu?'iu':''}" onclick="selS('${bid}',${si})">${si}</button>`}).join('')}</div>`}
 
 let suPg=0, suOp=false, suBop={};
