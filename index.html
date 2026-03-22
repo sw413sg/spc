@@ -10,7 +10,7 @@
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-192.png">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600&family=Outfit:wght@300;400;500;600;700&family=Sora:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<title>SPC v2.9</title>
+<title>SPC v2.10</title>
 <style id="TS"></style>
 <style id="TPL"></style>
 <style>
@@ -85,7 +85,6 @@ h1{font-size:26px;font-weight:600;letter-spacing:2px;text-transform:uppercase}
 .bxr{display:flex;flex-direction:column;align-items:flex-end;gap:2px;flex-shrink:0}
 .bxe{font-size:11px;color:var(--ac);font-weight:500;white-space:nowrap}
 .bxp{font-size:18px;font-weight:500;color:var(--gn)}.bxp.pa{color:var(--or);animation:bk 1s ease-in-out infinite}
-@keyframes bk{0%,100%{opacity:1}50%{opacity:.35}}
 .chv{color:var(--tx2);font-size:14px;transition:transform .3s;margin-left:6px;opacity:.5}.bc.xp .chv{transform:rotate(90deg);opacity:1;color:var(--ac)}
 .bbd{max-height:0;overflow:hidden;transition:max-height .45s cubic-bezier(.32,.72,.24,1)}.bc.xp .bbd{max-height:1800px}
 .bbi{padding:0 12px 20px}
@@ -172,26 +171,39 @@ h1{font-size:26px;font-weight:600;letter-spacing:2px;text-transform:uppercase}
 <body>
 <div class="nb" id="NB"><div class="nbi" id="Ni">⏰</div><div class="nbc"><div class="nbt" id="Nt">SPC</div><div class="nbb" id="Nb"></div></div></div>
 
+<div class="mo" id="M_COPY" onclick="if(event.target===this)cS_copy()">
+    <div class="moi">
+        <div class="mo-top"><div class="mot">Copiar Parte</div><button class="mo-close" onclick="cS_copy()">✕</button></div>
+        <div id="copy-list" style="margin-bottom:16px;"></div>
+        <button class="mob ex" style="background:var(--ac);color:#fff" onclick="execCopy()">Copiar al portapapeles</button>
+    </div>
+</div>
+
 <div class="mo" id="M_STOP" onclick="if(event.target===this)cS_stop()">
     <div class="moi">
         <div class="mo-top"><div class="mot">Detener Cinta</div><button class="mo-close" onclick="cS_stop()">✕</button></div>
         <div style="text-align:center; margin-bottom:20px;">
-            <div style="font-size:16px; font-weight:600; color:var(--tx);" id="stop-title"></div>
-            <div style="font-size:12px; color:var(--tx2); margin-top:4px;">Ingresá los metros finales del silo</div>
+            <div style="font-size:18px; font-weight:600; color:var(--tx);" id="stop-title"></div>
+            <div style="font-size:12px; color:var(--tx2); margin-top:6px;">Silo detenido, ingresá con cuántos metros quedó.</div>
         </div>
         
         <div style="display:flex; gap:8px; margin-bottom:12px;">
-            <button class="mob" style="background:var(--ce); color:var(--tx); border-color:var(--sp); flex:1;" onclick="document.getElementById('stop-grid').classList.toggle('hh')">Metros</button>
+            <button class="mob" style="background:var(--orb); color:var(--or); border-color:rgba(232,148,58,.2); flex:1;" onclick="document.getElementById('stop-grid').classList.toggle('hh')">Metros</button>
             <button class="mob" style="background:var(--gnd); color:var(--gn); border-color:rgba(34,197,114,.2); flex:1;" onclick="cnfStop('full')">Lleno</button>
         </div>
         
         <div id="stop-grid" class="mgd hh" style="margin-bottom:12px;"></div>
 
-        <button class="mob" style="background:var(--ce); color:var(--tx); border-color:var(--sp); margin-bottom:12px;" onclick="cnfStop('est')">Medida actual: <span id="stop-est-val" style="color:var(--ac);margin-left:4px;"></span></button>
+        <button class="mob" style="background:var(--ce); color:var(--tx); border-color:var(--sp); margin-bottom:12px;" onclick="cnfStop('est')">Usar medida estimada: <span id="stop-est-val" style="color:var(--ac);margin-left:4px;"></span></button>
 
         <div style="display:flex; gap:8px; margin-bottom:12px;">
             <input type="number" id="stop-mt-in" placeholder="Manual (ej. 8)" style="flex:1; height:50px; background:var(--bg2); border:1px solid var(--sp); border-radius:14px; color:var(--tx); padding:0 16px; font-size:16px; font-family:var(--mono); outline:none;">
             <button class="mob ex" style="width:auto; padding:0 24px; margin:0;" onclick="cnfStop('manual')">OK</button>
+        </div>
+        
+        <div class="sr" style="margin-bottom:12px; padding:10px 16px;">
+            <div class="srt">Seguir configuración actual</div>
+            <button class="tg" id="stop-keep-cfg" onclick="this.classList.toggle('on')"></button>
         </div>
     </div>
 </div>
@@ -201,7 +213,7 @@ h1{font-size:26px;font-weight:600;letter-spacing:2px;text-transform:uppercase}
 <div class="sg2" id="sg-rep">
     <div class="sgl" onclick="document.getElementById('sg-rep').classList.toggle('op')">Reportes <span>›</span></div>
     <div class="sg2-bd"><div class="sg2-bd-in">
-        <button class="mob ex" style="background:var(--ac);color:#fff" onclick="copyPart()">Copiar parte</button>
+        <button class="mob ex" style="background:var(--ac);color:#fff" onclick="oCopy()">Copiar parte</button>
     </div></div>
 </div>
 
@@ -242,7 +254,7 @@ h1{font-size:26px;font-weight:600;letter-spacing:2px;text-transform:uppercase}
 </div>
 
 </div></div>
-<div class="hd"><div class="h1r"><div class="h1l"><h1>SPC</h1><div style="font-size:12px;color:var(--tx2);font-weight:600;font-family:var(--mono);margin-top:4px;">v2.9</div></div><div class="hrr"><div class="clk" id="CK">00:00:00</div><button class="hib" onclick="oS()">⚙️</button></div></div></div>
+<div class="hd"><div class="h1r"><div class="h1l"><h1>SPC</h1><div style="font-size:12px;color:var(--tx2);font-weight:600;font-family:var(--mono);margin-top:4px;">v2.10</div></div><div class="hrr"><div class="clk" id="CK">00:00:00</div><button class="hib" onclick="oS()">⚙️</button></div></div></div>
 <div class="ctn"><div class="spacer"></div><div id="BC"></div><div id="RSC"></div><div id="SUC"></div><div id="HC"></div></div>
 <script>
 const R=(a,b)=>{const r=[];for(let i=a;i<=b;i++)r.push(i);return r},P=n=>n.toString().padStart(2,'0'),fT=ms=>{const t=Math.floor(ms/1000),h=Math.floor(t/3600),m=Math.floor((t%3600)/60),s=t%60;return`${P(h)}:${P(m)}:${P(s)}`},fM=m=>{const h=Math.floor(m/60),r=Math.ceil(m%60);return h>0?`${h}h ${P(r)}m`:`${r} min`},dK=d=>`${d.getFullYear()}-${P(d.getMonth()+1)}-${P(d.getDate())}`,tK=()=>dK(new Date()),DN=['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'],MN=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'],fDL=k=>{const p=k.split('-'),d=new Date(+p[0],+p[1]-1,+p[2]);return`${DN[d.getDay()]} ${+p[2]} ${MN[+p[1]-1]}`};
@@ -250,6 +262,7 @@ const MX=37,siloC=s=>Math.floor(s/100)*100,isFiller=s=>[200,400,600].includes(si
 function fillLim(s){if(isFiller(s))return 4;if(FILL_15.includes(s))return 15;if(FILL_10.includes(s))return 10;return 1}
 const has700C=(s,b)=>is700CE(s,b)&&!FILL_15.includes(s);
 
+// Paleta de Cereales Actualizada
 const CER_C = {maiz:'#FF8C00',trigo:'#FFD700',sorgo:'#800020',girasol:'#95A5A6',cebada:'#FDE08B',soja:'#F1E5AC'};
 const CER_L = {maiz:'Maíz',trigo:'Trigo',sorgo:'Sorgo',girasol:'Girasol',cebada:'Cebada',soja:'Soja'};
 const ORI_L = {descarga:'Descarga',transferencia:'Transf.',transile:'Transile'};
@@ -376,7 +389,79 @@ function spLN(b){clearInterval(ntfI[b]);delete ntfI[b];delete ntfSent[b]}
 function chkNtf(b){const s=S[b];if(!s.silo||!s.mt||!s.run)return;const eta=calcETA(s.mt,s.spd,s.el,s.silo,b);if(eta!==null&&eta<=600000&&eta>0&&!ntfSent[b]){ntfSent[b]=true;sP(`${gB(b).n} · Silo ${s.silo}`,`Faltan ~10 min para llenarse`)}}
 function sP(t,bo){if(!('Notification' in window)||Notification.permission!=='granted'||!navigator.serviceWorker?.controller)return;navigator.serviceWorker.ready.then(r=>r.showNotification(t,{body:bo,icon:'./icon-192.png',badge:'./icon-192.png',tag:'spc-'+Date.now(),renotify:true,vibrate:[200,100,200]})).catch(()=>{})}
 
-function copyPart() {
+// Funciones Copiar Parte
+let copyData = {};
+let copyGridOpen = {};
+
+function oCopy() {
+    copyData = {};
+    copyGridOpen = {};
+    let hasActive = false;
+    BELTS.forEach(b => {
+        const s = S[b.id];
+        if(s.run || s.pau) {
+            hasActive = true;
+            const cm = estMeters(s.mt, s.spd, s.el, s.silo, b.id);
+            copyData[b.id] = cm;
+            copyGridOpen[b.id] = false;
+        }
+    });
+
+    if(!hasActive) {
+        cS(); 
+        return sN2('Nada activo para copiar');
+    }
+    
+    renderCopyList();
+    cS(); 
+    document.getElementById('M_COPY').classList.add('sh');
+}
+
+function cS_copy() {
+    document.getElementById('M_COPY').classList.remove('sh');
+}
+
+function renderCopyList() {
+    const c = document.getElementById('copy-list');
+    let h = '';
+    BELTS.forEach(b => {
+        const s = S[b.id];
+        if(s.run || s.pau) {
+            const estCm = estMeters(s.mt, s.spd, s.el, s.silo, b.id);
+            const estStr = estCm !== null ? (estCm===MX?'Vacío':`${estCm} mts est.`) : 'S/D';
+            const curVal = copyData[b.id];
+            const curStr = curVal !== null ? (curVal===MX?'Vacío':`${curVal} mts`) : 'S/D';
+
+            let cerStr = s.cer ? CER_L[s.cer] : 'Sin cereal';
+            
+            h += `
+            <div style="background:var(--bg2); border:1px solid var(--sp); border-radius:12px; padding:12px; margin-bottom:8px;">
+                <div style="font-weight:600; font-size:14px; margin-bottom:8px;">${b.n} - ${s.silo} <span style="font-weight:normal;color:var(--tx2);font-size:12px;">(${cerStr})</span></div>
+                <div style="display:flex; gap:6px; margin-bottom: ${copyGridOpen[b.id] ? '8px' : '0'}">
+                    <button class="mob" style="margin:0; flex:1; background:var(--ce); color:var(--tx); border-color:var(--sp); font-size:12px;" onclick="setCopyVal('${b.id}', ${estCm})">${estStr}</button>
+                    <button class="mob" style="margin:0; flex:1; background:var(--orb); color:var(--or); border-color:rgba(232,148,58,.2); font-size:12px;" onclick="tCopyGrid('${b.id}')">${curVal!==estCm && curVal!==null ? curStr : 'Metros'}</button>
+                </div>
+                <div class="mgd ${copyGridOpen[b.id] ? '' : 'hh'}" style="margin-top:0;">
+                    ${R(1,MX-1).map(m=>`<button class="mbt ${curVal===m?'sl':''}" onclick="setCopyVal('${b.id}', ${m})">${m}</button>`).join('')}
+                </div>
+            </div>`;
+        }
+    });
+    c.innerHTML = h;
+}
+
+function tCopyGrid(bid) {
+    copyGridOpen[bid] = !copyGridOpen[bid];
+    renderCopyList();
+}
+
+function setCopyVal(bid, val) {
+    copyData[bid] = val;
+    copyGridOpen[bid] = false;
+    renderCopyList();
+}
+
+function execCopy() {
     let txt = [];
     BELTS.forEach(b => {
         const s = S[b.id];
@@ -388,7 +473,7 @@ function copyPart() {
             if(s.ori === 'transferencia') oriStr = 'Transf';
             if(s.ori === 'transile') oriStr = 'Transile';
             
-            const cm = estMeters(s.mt, s.spd, s.el, s.silo, b.id);
+            const cm = copyData[b.id];
             let mStr = '';
             if (cm !== null) {
                 mStr = cm === MX ? 'Vacío' : `${cm} mts.`;
@@ -404,11 +489,12 @@ function copyPart() {
     
     const str = txt.join('\n');
     if(navigator.clipboard && navigator.clipboard.writeText){
-        navigator.clipboard.writeText(str).then(()=>{sN2('Parte copiado ✅');cS();}).catch(()=>fallbackCopy(str));
+        navigator.clipboard.writeText(str).then(()=>{sN2('Parte copiado ✅');cS_copy();}).catch(()=>fallbackCopy(str));
     }else{
         fallbackCopy(str);
     }
 }
+
 function fallbackCopy(str){
     const ta = document.createElement('textarea');
     ta.value = str;
@@ -417,7 +503,7 @@ function fallbackCopy(str){
     document.execCommand('copy');
     document.body.removeChild(ta);
     sN2('Parte copiado ✅');
-    cS();
+    cS_copy();
 }
 
 function delSu(d,b,s){
@@ -437,11 +523,12 @@ let sc=Date.now();const nSid=()=>'s'+(sc++);
 let stopTgt=null, stopEst=null;
 function oS_stop(b,cm){
     stopTgt=b;stopEst=cm;
-    document.getElementById('stop-title').textContent=`Cinta ${gB(b).n} · Silo ${S[b].silo}`;
+    document.getElementById('stop-title').textContent=`Silo ${S[b].silo}`;
     const estValStr = cm!==null?(cm===MX?'Vacío':cm+' mts'):'S/D';
     document.getElementById('stop-est-val').textContent = estValStr;
     document.getElementById('stop-mt-in').value='';
     document.getElementById('stop-grid').classList.add('hh'); // reset
+    document.getElementById('stop-keep-cfg').classList.remove('on'); // reset OFF by default
     document.getElementById('M_STOP').classList.add('sh');
 }
 function cS_stop(){document.getElementById('M_STOP').classList.remove('sh');stopTgt=null;}
@@ -466,7 +553,7 @@ function cnfStop(t){
 
 function tOc(b) { S[b].ocOpen=!S[b].ocOpen; renderAll(); document.getElementById(`c-${b}`).classList.add('xp'); }
 function sOri(b,o) { S[b].ori = S[b].ori===o?null:o; svS(); renderAll(); document.getElementById(`c-${b}`).classList.add('xp'); }
-function sCer(b,c) { S[b].cer = S[b].cer===c?null:c; svS(); renderAll(); document.getElementById(`c-${b}`).classList.add('xp'); }
+function sCer(b,c) { S[b].cer = S[b].cer===c?null:c; S[b].ocOpen=false; svS(); renderAll(); document.getElementById(`c-${b}`).classList.add('xp'); }
 
 function renderB(){document.getElementById('BC').innerHTML=BELTS.map(b=>{const s=S[b.id],tot=aS(b).length;let sub,subC='',tP='',tPC='hh',etP='',etPC='hh';
 
@@ -627,16 +714,9 @@ function renderUsedSilos(){
             if(info.full) mTxt = 'Lleno';
             
             let cerStr = info.cer ? `<span class="su-time" style="margin:0; padding:2px 6px; background:${CER_C[info.cer]}22; border-color:${CER_C[info.cer]}44; color:${CER_C[info.cer]};">${CER_L[info.cer]}</span>` : '';
-            
-            let oriShort = '';
-            if(info.ori === 'descarga') oriShort = 'Desc.';
-            else if(info.ori === 'transferencia') oriShort = 'Transf.';
-            else if(info.ori === 'transile') oriShort = 'T.sile';
-            let oriStr = oriShort ? `<span class="su-time" style="margin:0; padding:2px 6px;">${oriShort}</span>` : '';
 
             h += `<div class="suit" style="padding:10px 12px; display:flex; align-items:center; gap:4px; white-space:nowrap;">
-                <span class="su-time" style="margin:0; padding:2px 6px;">${info.firstHour}</span>
-                ${oriStr}
+                <span class="su-time" style="margin:0; padding:2px 6px;">${info.firstHour} hs</span>
                 <span class="suits" style="flex:none; font-size:12px;">${item.silo}</span>
                 ${cerStr}
                 <div style="flex:1; text-align:right; font-size:11px; color:var(--tx2); overflow:hidden; text-overflow:ellipsis;">
@@ -745,7 +825,6 @@ function renderResumen(){
                     const info = item.info;
                     let mTxt = info.meters !== null ? (info.meters === MX ? 'Vacío' : `${info.meters}m`) : 'Inic.';
                     if(info.full) mTxt = 'Lleno';
-                    
                     let cerStr = info.cer ? `<span class="su-time" style="margin:0; padding:2px 6px; background:${CER_C[info.cer]}22; border-color:${CER_C[info.cer]}44; color:${CER_C[info.cer]};">${CER_L[info.cer]}</span>` : '';
                     
                     h += `<div class="suit" style="padding:10px 12px; display:flex; align-items:center; gap:4px; white-space:nowrap;">
@@ -907,7 +986,11 @@ function executeStop(b,cm,isF){
     logs.push({bid:b, silo:s.silo, meters:cm, speed:getMpmLabel(s.spd,s.silo), duration:dur, hour:hr, ms:s.el, sid:s.sid, type:'stop', full:isF, date:tK(), cer:s.cer, ori:s.ori});
     saveLogs(logs);
 
-    s.run=false;s.pau=false;s.el=0;s.po=0;s.sid=null;s.silo=null;s.mt=null;s.sMt=false;s.spd=null;s.grp=null;s.ori=null;s.cer=null;s.ocOpen=false;svS();
+    const keepCfg = document.getElementById('stop-keep-cfg').classList.contains('on');
+
+    s.run=false;s.pau=false;s.el=0;s.po=0;s.sid=null;s.silo=null;s.mt=null;s.sMt=false;s.grp=null;s.ocOpen=false;
+    if(!keepCfg) { s.ori=null; s.cer=null; s.spd=null; }
+    svS();
     renderAll();document.getElementById(`c-${b}`).classList.add('xp')
 }
 
