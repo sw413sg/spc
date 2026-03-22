@@ -10,7 +10,7 @@
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-192.png">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600&family=Outfit:wght@300;400;500;600;700&family=Sora:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<title>SPC v2.12</title>
+<title>SPC v2.13</title>
 <style id="TS"></style>
 <style id="TPL"></style>
 <style>
@@ -265,7 +265,7 @@ h1{font-size:26px;font-weight:600;letter-spacing:2px;text-transform:uppercase}
 </div>
 
 </div></div>
-<div class="hd"><div class="h1r"><div class="h1l"><h1>SPC</h1><div style="font-size:12px;color:var(--tx2);font-weight:600;font-family:var(--mono);margin-top:4px;">v2.12</div></div><div class="hrr"><div class="clk" id="CK">00:00:00</div><button class="hib" onclick="oS()">⚙️</button></div></div></div>
+<div class="hd"><div class="h1r"><div class="h1l"><h1>SPC</h1><div style="font-size:12px;color:var(--tx2);font-weight:600;font-family:var(--mono);margin-top:4px;">v2.13</div></div><div class="hrr"><div class="clk" id="CK">00:00:00</div><button class="hib" onclick="oS()">⚙️</button></div></div></div>
 <div class="ctn"><div class="spacer"></div><div id="BC"></div><div id="RSC"></div><div id="SUC"></div><div id="HC"></div></div>
 <script>
 const R=(a,b)=>{const r=[];for(let i=a;i<=b;i++)r.push(i);return r},P=n=>n.toString().padStart(2,'0'),fT=ms=>{const t=Math.floor(ms/1000),h=Math.floor(t/3600),m=Math.floor((t%3600)/60),s=t%60;return`${P(h)}:${P(m)}:${P(s)}`},fM=m=>{const h=Math.floor(m/60),r=Math.ceil(m%60);return h>0?`${h}h ${P(r)}m`:`${r} min`},dK=d=>`${d.getFullYear()}-${P(d.getMonth()+1)}-${P(d.getDate())}`,tK=()=>dK(new Date()),DN=['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'],MN=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'],fDL=k=>{const p=k.split('-'),d=new Date(+p[0],+p[1]-1,+p[2]);return`${DN[d.getDay()]} ${+p[2]} ${MN[+p[1]-1]}`};
@@ -342,8 +342,6 @@ function estMeters(mt,spd,el,silo,bid){
 }
 
 const fETA=ms=>{if(ms==null)return'';if(ms<=0)return'¡Completo!';return`~${fM(ms/60000)} rest.`},sETA=ms=>{if(ms==null)return'';if(ms<=0)return'✓';return`~${fM(ms/60000)}`},mtL=mt=>mt===MX?'Vacío':mt+' mts.',mtSL=mt=>mt===MX?'Vacío':mt+' (mts)',mtH=mt=>mt===MX?'Vacío':(mt||'?')+' mts.',fHr=h=>h+' hs.';
-function fArr(m) { return (m === null || m === MX) ? 'A. V' : `A. ${m} mts.`; }
-
 const BELTS=[{id:'ce1',n:'CE 1',sh:'CE1',tp:'ce',sg:[{l:'700',s:R(701,718)}]},{id:'ce2',n:'CE 2',sh:'CE2',tp:'ce',sg:[{l:'700',s:R(701,717)}]},{id:'cd1',n:'CD 1',sh:'CD1',tp:'cd',sg:[{l:'500',s:R(501,518)},{l:'600',s:R(601,617)}]},{id:'cd2',n:'CD 2',sh:'CD2',tp:'cd',sg:[{l:'300',s:R(301,318)},{l:'400',s:R(401,417)}]},{id:'cd3',n:'CD 3',sh:'CD3',tp:'cd',sg:[{l:'100',s:R(101,118)},{l:'200',s:R(201,217)}]}],aS=b=>b.sg.flatMap(g=>g.s),gB=id=>BELTS.find(b=>b.id===id);
 const S={},TI={},dSt=()=>({silo:null,run:false,pau:false,el:0,st:null,po:0,grp:null,mt:null,sMt:false,spd:null,sid:null,ori:null,cer:null,ocOpen:false});BELTS.forEach(b=>{S[b.id]=dSt()});
 const TPLS={modern:{name:'Moderno',desc:'Limpio y geométrico',dot:'linear-gradient(135deg,#3b8bff,#6c5ce7)',font:"'Outfit',system-ui,sans-serif",mono:"'JetBrains Mono',monospace",bg:'#07080b',bg2:'#0c0d12',cd:'#111218',ce:'#181920',ch:'#1e2028',tx:'#dcdfe8',ts:'#6e7186',sp:'rgba(255,255,255,.06)',ac:'#3b8bff',pu:'#6c5ce7',gn:'#22c572',or:'#e8943a',rd:'#e84057',tg:'linear-gradient(135deg,#3b8bff,#6c5ce7)'},neutral:{name:'Neutral',desc:'Tonos cálidos y suaves',dot:'linear-gradient(135deg,#c9a96e,#a08050)',font:"'DM Sans',system-ui,sans-serif",mono:"'JetBrains Mono',monospace",bg:'#0c0b09',bg2:'#12110e',cd:'#181714',ce:'#1f1e1a',ch:'#262520',tx:'#dbd6cc',ts:'#8a8478',sp:'rgba(255,255,255,.06)',ac:'#c9a96e',pu:'#a08050',gn:'#7ab87a',or:'#d4943e',rd:'#c45a50',tg:'linear-gradient(135deg,#c9a96e,#a08050)'},sophisticated:{name:'Sofisticado',desc:'Elegante y minimalista',dot:'linear-gradient(135deg,#8b7af5,#e084b4)',font:"'Sora',system-ui,sans-serif",mono:"'JetBrains Mono',monospace",bg:'#09080e',bg2:'#0e0d14',cd:'#14131b',ce:'#1b1a23',ch:'#22212b',tx:'#d8d4e4',ts:'#7a768e',sp:'rgba(255,255,255,.06)',ac:'#8b7af5',pu:'#e084b4',gn:'#5ec4a0',or:'#d4a24e',rd:'#d45a6e',tg:'linear-gradient(135deg,#8b7af5,#e084b4)'}};
@@ -732,7 +730,8 @@ function renderUsedSilos(){
         items.forEach(item => {
             const info = item.info;
             let mHtml = info.meters !== null ? (info.meters === MX ? 'Vacío' : `${info.meters}m`) : 'Inic.';
-            if(info.full) mHtml = `<span class="su-time" style="background:var(--gnd); border-color:rgba(34,197,114,.4); color:var(--gn); margin:0; padding:2px 6px;">Lleno</span>`;
+            if(info.full) mHtml = `<span class="su-time" style="background:var(--gnd); border-color:rgba(34,197,114,.4); color:var(--gn); margin:0; padding:2px 6px;">Lleno (${info.hour})</span>`;
+            else mHtml = `${mHtml} <span style="opacity:0.7">(${info.hour})</span>`;
             
             let cerStr = info.cer ? `<span class="su-time" style="margin:0; padding:2px 6px; background:${CER_C[info.cer]}22; border-color:${CER_C[info.cer]}44; color:${CER_C[info.cer]};">${CER_L[info.cer]}</span>` : '';
             let arrTxt = (info.firstMeters === MX || info.firstMeters === null) ? 'A. V' : `A. ${info.firstMeters} mts.`;
@@ -740,12 +739,12 @@ function renderUsedSilos(){
             h += `<div class="suit" style="padding:10px 12px; display:flex; align-items:center; gap:4px; white-space:nowrap;">
                 <div style="display:flex;align-items:center;flex-wrap:wrap;gap:6px;flex:1;min-width:0;padding-right:12px;">
                     <span class="su-time" style="margin:0; padding:2px 6px;">${info.firstHour} hs</span>
-                    <span class="suits" style="flex:none; font-size:12px;">Silo ${item.silo}</span>
+                    <span class="suits" style="flex:none; font-size:12px;">${item.silo}</span>
                     ${cerStr}
                     <span style="font-size:11px; color:var(--tx2); opacity:0.8; flex-shrink:0;">${arrTxt}</span>
                 </div>
                 <div style="display:flex;align-items:center;flex-shrink:0;">
-                    <span class="suitm" style="display:flex;align-items:center;gap:4px;">${mHtml} <span style="opacity:0.7">(${info.hour})</span></span>
+                    <span class="suitm" style="display:flex;align-items:center;gap:4px;">${mHtml}</span>
                     <button class="su-del" onclick="delSu('${curDate}', '${b.id}', ${item.silo})">✕</button>
                 </div>
             </div>`;
@@ -849,7 +848,8 @@ function renderResumen(){
                 items.forEach(item => {
                     const info = item.info;
                     let mHtml = info.meters !== null ? (info.meters === MX ? 'Vacío' : `${info.meters}m`) : 'Inic.';
-                    if(info.full) mHtml = `<span class="su-time" style="background:var(--gnd); border-color:rgba(34,197,114,.4); color:var(--gn); margin:0; padding:2px 6px;">Lleno</span>`;
+                    if(info.full) mHtml = `<span class="su-time" style="background:var(--gnd); border-color:rgba(34,197,114,.4); color:var(--gn); margin:0; padding:2px 6px;">Lleno (${info.hour})</span>`;
+                    else mHtml = `${mHtml} <span style="opacity:0.7">(${info.hour})</span>`;
                     
                     let cerStr = info.cer ? `<span class="su-time" style="margin:0; padding:2px 6px; background:${CER_C[info.cer]}22; border-color:${CER_C[info.cer]}44; color:${CER_C[info.cer]};">${CER_L[info.cer]}</span>` : '';
                     let arrTxt = (info.firstMeters === MX || info.firstMeters === null) ? 'A. V' : `A. ${info.firstMeters} mts.`;
@@ -857,12 +857,12 @@ function renderResumen(){
                     h += `<div class="suit" style="padding:10px 12px; display:flex; align-items:center; gap:4px; white-space:nowrap;">
                         <div style="display:flex;align-items:center;flex-wrap:wrap;gap:6px;flex:1;min-width:0;padding-right:12px;">
                             <span class="su-time" style="margin:0; padding:2px 6px;">${info.firstHour} hs</span>
-                            <span class="suits" style="flex:none; font-size:12px;">${item.belt.n} Silo ${item.silo}</span>
+                            <span class="suits" style="flex:none; font-size:12px;">${item.silo}</span>
                             ${cerStr}
                             <span style="font-size:11px; color:var(--tx2); opacity:0.8; flex-shrink:0;">${arrTxt}</span>
                         </div>
                         <div style="display:flex;align-items:center;flex-shrink:0;">
-                            <span class="suitm" style="display:flex;align-items:center;gap:4px;">${mHtml} <span style="opacity:0.7">(${info.hour})</span></span>
+                            <span class="suitm" style="display:flex;align-items:center;gap:4px;">${mHtml}</span>
                             <button class="su-del" onclick="delSu('${curDate}', '${item.belt.id}', ${item.silo})">✕</button>
                         </div>
                     </div>`;
@@ -890,7 +890,8 @@ function renderResumen(){
             allItems.forEach(item => {
                 const info = item.info;
                 let mHtml = info.meters !== null ? (info.meters === MX ? 'Vacío' : `${info.meters}m`) : 'Inic.';
-                if(info.full) mHtml = `<span class="su-time" style="background:var(--gnd); border-color:rgba(34,197,114,.4); color:var(--gn); margin:0; padding:2px 6px;">Lleno</span>`;
+                if(info.full) mHtml = `<span class="su-time" style="background:var(--gnd); border-color:rgba(34,197,114,.4); color:var(--gn); margin:0; padding:2px 6px;">Lleno (${info.hour})</span>`;
+                else mHtml = `${mHtml} <span style="opacity:0.7">(${info.hour})</span>`;
                 
                 let cerStr = info.cer ? `<span class="su-time" style="margin:0; padding:2px 6px; background:${CER_C[info.cer]}22; border-color:${CER_C[info.cer]}44; color:${CER_C[info.cer]};">${CER_L[info.cer]}</span>` : '';
                 
@@ -906,12 +907,12 @@ function renderResumen(){
                     <div style="display:flex;align-items:center;flex-wrap:wrap;gap:6px;flex:1;min-width:0;padding-right:12px;">
                         <span class="su-time" style="margin:0; padding:2px 6px;">${info.firstHour}</span>
                         ${oriStr}
-                        <span class="suits" style="flex:none; font-size:12px;">Silo ${item.silo}</span>
+                        <span class="suits" style="flex:none; font-size:12px;">${item.silo}</span>
                         ${cerStr}
                         <span style="font-size:11px; color:var(--tx2); opacity:0.8; flex-shrink:0;">${arrTxt}</span>
                     </div>
                     <div style="display:flex;align-items:center;flex-shrink:0;">
-                        <span class="suitm" style="display:flex;align-items:center;gap:4px;">${mHtml} <span style="opacity:0.7">(${info.hour})</span></span>
+                        <span class="suitm" style="display:flex;align-items:center;gap:4px;">${mHtml}</span>
                         <button class="su-del" onclick="delSu('${curDate}', '${item.belt.id}', ${item.silo})">✕</button>
                     </div>
                 </div>`;
@@ -933,10 +934,7 @@ let h='<div class="hsx"><div class="hst">Historial</div>';pd.forEach((date,di)=>
 const byB={};dl.forEach(e=>{const bid=e.bid||'?';if(!byB[bid])byB[bid]=[];byB[bid].push(e)});BELTS.forEach(b=>{const ent=byB[b.id]||[];if(!ent.length)return;const gr={};ent.forEach(e=>{const sid=e.sid||e.hour+e.silo;if(!gr[sid])gr[sid]=[];gr[sid].push(e)});
 h+=`<div class="hbg"><div class="hbl">${b.n}</div><div class="hcd">`;Object.values(gr).reverse().forEach(g=>{const last=g[g.length-1],first=g[0],hasU=g.length>1;
 
-let firstMt = `<span class="hmo">${mtH(first.meters)}</span>`;
-let lastMt = `<span class="hmo">${mtH(last.meters)}</span>`;
-
-h+=`<div class="hii"><button class="hi-del" onclick="delLog(${last._idx})">✕</button><div class="him"><div class="hil">${b.n} Silo ${last.silo} a ${firstMt}${hasU?` → ${lastMt}`:''}</div><div class="hir"><div class="hih">${fHr(last.hour)}</div><div class="${durCls}">${last.duration}</div></div></div>`;
+h+=`<div class="hii"><button class="hi-del" onclick="delLog(${last._idx})">✕</button><div class="him"><div class="hil">${b.n} Silo ${last.silo} a <span class="hmo">${mtH(first.meters)}</span>${hasU?` → <span class="hmo">${mtH(last.meters)}</span>`:''}</div><div class="hir"><div class="hih">${fHr(last.hour)}</div><div class="${durCls}">${last.duration}</div></div></div>`;
 if(hasU){h+=`<button class="hieb" onclick="this.nextElementSibling.classList.toggle('hh')">${g.length-1} act.</button><div class="hiu hh">${g.map((u,i)=>{
     let mHtml = `<span>${mtH(u.meters)}</span>`;
     return `<div class="hiud">${i===0?'Inicio':(u.type==='stop'?'Fin':(u.type==='update'?'Act.':'Reinicio'))}: ${mHtml} — ${u.duration} (${fHr(u.hour)})</div>`;
